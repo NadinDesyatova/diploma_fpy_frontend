@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 
 function UploadFile ({ userId, setLastFileUpload}) {
-
   const [inputContent, setInputContent] = useState({
     'new_file': null,
     'file_name': '',
@@ -15,9 +14,10 @@ function UploadFile ({ userId, setLastFileUpload}) {
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
+    console.log(e.target.files);
     setInputContent((prev) => ({
       ...prev, 
-      [name]: name === 'new_file' ? value.files[0] : value
+      [name]: name === 'new_file' ? e.target.files[0] : value
     }));
   };
 

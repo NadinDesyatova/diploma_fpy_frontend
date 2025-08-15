@@ -13,7 +13,7 @@ export function Authorization ({ SetViewPage }) {
   useEffect(() => {
     const storedLogin = localStorage.getItem('userLogin');
     const storedPassword = localStorage.getItem('userPassword');
-    console.log(storedLogin)
+    console.log(storedLogin);
     if (storedLogin || storedPassword) {
       fetch(`${import.meta.env.VITE_APP_BASE_USL_API}check_session/`, {
       method: "POST",
@@ -28,7 +28,7 @@ export function Authorization ({ SetViewPage }) {
     .then((data) => {
       if (data.status_code === 200) {
         console.log("Вы успешно авторизовались", data)
-        navigate('/files', { state: data.user[0], replace: true});
+        navigate('/files', { state: data.user[0], replace: false});
       }
     });
     }
@@ -52,23 +52,26 @@ export function Authorization ({ SetViewPage }) {
       }
     })
     .then((response) => {
-      console.log(response)
-
-      return response.json();
+      if (response.status === 200) {
+        return response.json();
+      }
+      else {
+        console.log(response);
+        setErrorMsg("Неверный логин или пароль");
+      }
     })
     .then((data) => {
-      console.log(data)
-      if (data.status_code === 200) {
-        console.log("Вы успешно авторизовались")
-        console.log(data)
+      console.log(data);
+      console.log(typeof data);
+      if (data) {
+        console.log("Вы успешно авторизовались");
+        console.log(data);
 
         localStorage.setItem('userLogin', inputInfo.login);
         localStorage.setItem('userPassword', inputInfo.password);
 
-        navigate('/files', { state: data.user[0], replace: true }); 
-      } else {
-        setErrorMsg("Неверный логин или пароль");
-      }
+        navigate('/files', { state: data, replace: false }); 
+      } 
     });
   };
 

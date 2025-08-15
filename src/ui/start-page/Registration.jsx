@@ -15,7 +15,7 @@ export function Registration ({ SetViewPage }) {
       titleText: "Enter only Latin letters and numbers, the first character is a letter, the length is from 4 to 20 characters."
     },
     password: {
-      regex: "^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{6,}$",
+      regex: "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).{6,}$",
       titleText: "Enter at least 6 characters: at least one uppercase letter, one digit and one special character."
     },
     email: {
@@ -49,7 +49,7 @@ export function Registration ({ SetViewPage }) {
       return response.json()
     }).then((data) => {
       console.log(data);
-      if (data.id) {
+      if (data.create_object.id) {
         setResultMsg("Успешно создан аккаунт. Сейчас вы будете перенаправлены на страницу входа.")
         setTimeout(() => {SetViewPage("Authorization")}, 2000);
       } else {

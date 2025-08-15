@@ -8,8 +8,10 @@ export function StartPage () {
   const [viewPage, SetViewPage] = useState('Authorization');
 
   return (
-    viewPage === "Authorization" 
-      ? <Authorization SetViewPage={SetViewPage} /> 
-      : <Registration SetViewPage={SetViewPage} />
+    <>  
+      {viewPage === "Authorization" 
+        ? <Authorization SetViewPage={SetViewPage} /> 
+        : <Registration SetViewPage={SetViewPage} />}
+    </>    
   );
 }

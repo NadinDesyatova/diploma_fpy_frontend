@@ -1,7 +1,36 @@
+import { useEffect, useState } from 'react';
 import UploadFile from './UploadFile';
 import { OneFile } from './OneFile';
+import { sortByDate } from '../../common/sortingDate';
 
-export function ViewFilesStorage ({id, viewFiles, setLastFileUpload}) {
+export function ViewFilesStorage ({id}) {
+  const [viewFiles, setViewFiles] = useState([]);
+  const [lastFileUpload, setLastFileUpload] = useState(new Date());
+
+  function sendFetchToGetUserFiles (id) {
+    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_user_files/${id}/`)
+    .then(response => {
+      console.log(response);
+      if (response.ok) {
+        return response.json()
+      } else {
+        return false
+      }
+    })
+    .then(data => {
+      if (data) {
+        setViewFiles(sortByDate(data));
+      }
+    })
+  }
+
+  useEffect(() => {
+    sendFetchToGetUserFiles(id);
+  }, []);
+  
+  useEffect(() => {
+    sendFetchToGetUserFiles(id);
+  }, [lastFileUpload]);
 
   return (
     <div className='container'>

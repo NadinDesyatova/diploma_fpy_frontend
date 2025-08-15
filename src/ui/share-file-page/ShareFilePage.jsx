@@ -30,8 +30,7 @@ export function ShareFilePage () {
 
   return (
     <div className='container'>
-      <h1>С Вами поделились файлом</h1>
-      {fileData.file_name}
+      <h1>С Вами поделились файлом: {fileData.file_name}</h1>
       <DownloadButton fileId={fileData.id} />
     </div>
   );

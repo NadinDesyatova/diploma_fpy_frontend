@@ -4,26 +4,26 @@ import { formatDate } from '../../common/formatDate';
 
 export function OneFile ({elem, fileLink, setLastFileUpload}) {
   const onGetLink = (id) => {
-    console.log(e.target.parent)
+    console.log("Получение ссылки на файл");
     fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_link_for_file/${id}/`)
       .then(response => {
         setLastFileUpload(new Date());
         console.log(response);
-    })
+    });
   }
 
   const onDelete = (id) => {
-    console.log(e.target.parent)
+    console.log("Удаление файла");
     fetch(`${import.meta.env.VITE_APP_BASE_USL_API}files/${id}/`, {
       method: 'DELETE'
     }).then(response => {
         setLastFileUpload(new Date());
         console.log(response);
-    })
+    });
   }
   
   const renameButton = (elem) => {
-    const newName = prompt("Введите новое имя файла: ")
+    const newName = prompt("Введите новое имя файла: ");
 
     try {
       fetch(`${import.meta.env.VITE_APP_BASE_USL_API}files/${elem.id}/`, {
@@ -47,7 +47,7 @@ export function OneFile ({elem, fileLink, setLastFileUpload}) {
   return ( 
     <li className="one-file" id={elem.id} key={elem.id}>
       <span>{elem.file_name}</span>
-      <span>{`${parseFloat(parseInt(inputContent.new_file.size) / 1000000)} MB`}</span>
+      <span>{`${parseFloat(parseInt(elem.file_size) / 1000000)} MB`}</span>
       <span>{formatDate(elem.date)}</span><br />
       <button onClick={() => {renameButton(elem)}}>Переименовать</button><br />
       <DownloadButton fileId={elem.id} setLastFileUpload={setLastFileUpload} />
