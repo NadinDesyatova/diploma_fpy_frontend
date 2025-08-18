@@ -12,6 +12,7 @@ export function OneUser ({elem, navigate, setLastUsersUpload}) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           admin: isAdmin
         })

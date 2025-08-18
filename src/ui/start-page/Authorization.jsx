@@ -17,10 +17,11 @@ export function Authorization ({ SetViewPage }) {
     if (storedLogin || storedPassword) {
       fetch(`${import.meta.env.VITE_APP_BASE_USL_API}check_session/`, {
       method: "POST",
-      body: JSON.stringify({login: storedLogin, password: storedPassword}),
       headers: {
         "Content-Type": "application/json",
-      }
+      },
+      credentials: 'include',
+      body: JSON.stringify({login: storedLogin, password: storedPassword})
     })
     .then((response) => {
       return response.json();
@@ -28,7 +29,7 @@ export function Authorization ({ SetViewPage }) {
     .then((data) => {
       if (data.status_code === 200) {
         console.log("Вы успешно авторизовались", data)
-        navigate('/files', { state: data.user[0], replace: false});
+        navigate('/files', { state: data.user[0], replace: true});
       }
     });
     }
@@ -46,6 +47,7 @@ export function Authorization ({ SetViewPage }) {
     e.preventDefault();
     fetch(`${import.meta.env.VITE_APP_BASE_USL_API}login/`, {
       method: "POST",
+      credentials: 'include',
       body: JSON.stringify(inputInfo),
       headers: {
         "Content-Type": "application/json",
@@ -61,8 +63,6 @@ export function Authorization ({ SetViewPage }) {
       }
     })
     .then((data) => {
-      console.log(data);
-      console.log(typeof data);
       if (data) {
         console.log("Вы успешно авторизовались");
         console.log(data);
@@ -70,7 +70,7 @@ export function Authorization ({ SetViewPage }) {
         localStorage.setItem('userLogin', inputInfo.login);
         localStorage.setItem('userPassword', inputInfo.password);
 
-        navigate('/files', { state: data, replace: false }); 
+        navigate('/files', { state: data, replace: true }); 
       } 
     });
   };

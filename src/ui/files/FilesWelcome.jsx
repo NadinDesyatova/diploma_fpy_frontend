@@ -9,9 +9,7 @@ function FilesWelcomeForAdmin ({state}) {
   return <Navigate to='/admin' state={state} replace={true} />;
 }
 
-function FilesWelcomeForSimpleUsers ({id, name, login}) {
-
-    
+function FilesWelcomeForSimpleUsers ({id, name, login}) {    
   return (
     <div className='container'>
       <LogoutButton login={login} />

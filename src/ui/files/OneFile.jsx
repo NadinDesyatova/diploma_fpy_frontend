@@ -31,6 +31,7 @@ export function OneFile ({elem, fileLink, setLastFileUpload}) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({
           file_name: newName
         })

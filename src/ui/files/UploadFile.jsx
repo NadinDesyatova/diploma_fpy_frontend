@@ -41,7 +41,8 @@ function UploadFile ({ userId, setLastFileUpload}) {
       console.log('Происходит отправка файла на сервер');
       const response = await fetch(serverUrl, {
         method: 'POST',
-        body: formData,
+        credentials: 'include',
+        body: formData
       });
 
       if (response.ok) {

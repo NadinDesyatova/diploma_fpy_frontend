@@ -9,6 +9,7 @@ function LogoutButton ({ login }) {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',
         body: JSON.stringify({login: login}),
       }).then(resp => {
         if (resp.status == 204) {

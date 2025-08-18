@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 export function Registration ({ SetViewPage }) {
-
   const [inputInfo, setInputInfo] = useState({
     name: '',
     login: '',
@@ -44,14 +43,15 @@ export function Registration ({ SetViewPage }) {
       body: JSON.stringify(inputInfo),
       headers: {
         "Content-Type": "application/json",
-      }
+      },
+      credentials: 'include'
     }).then((response) => {
       return response.json()
     }).then((data) => {
       console.log(data);
       if (data.create_object.id) {
-        setResultMsg("Успешно создан аккаунт. Сейчас вы будете перенаправлены на страницу входа.")
-        setTimeout(() => {SetViewPage("Authorization")}, 2000);
+        setResultMsg("Успешно создан аккаунт. Нажмите, пожалуйста, на кнопку 'Войти' для перехода на страницу входа.")
+        // setTimeout(() => {SetViewPage("Authorization")}, 2000);
       } else {
         console.log(data.login[0]);
         setResultMsg("Данный логин уже используется");
