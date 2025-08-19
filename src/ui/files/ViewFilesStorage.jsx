@@ -8,7 +8,10 @@ export function ViewFilesStorage ({id}) {
   const [lastFileUpload, setLastFileUpload] = useState(new Date());
 
   function sendFetchToGetUserFiles (id) {
-    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_user_files/${id}/`, { credentials: 'include' })
+    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_user_files/${id}/`, { 
+      method: 'GET',
+      credentials: 'include' 
+    })
     .then(response => {
       console.log(response);
       if (response.ok) {

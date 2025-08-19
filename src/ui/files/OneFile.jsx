@@ -5,7 +5,10 @@ import { formatDate } from '../../common/formatDate';
 export function OneFile ({elem, fileLink, setLastFileUpload}) {
   const onGetLink = (id) => {
     console.log("Получение ссылки на файл");
-    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_link_for_file/${id}/`)
+    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_link_for_file/${id}/`, {
+      method: 'GET',
+      credentials: 'include'
+    })
       .then(response => {
         setLastFileUpload(new Date());
         console.log(response);
@@ -15,7 +18,8 @@ export function OneFile ({elem, fileLink, setLastFileUpload}) {
   const onDelete = (id) => {
     console.log("Удаление файла");
     fetch(`${import.meta.env.VITE_APP_BASE_USL_API}files/${id}/`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      credentials: 'include'
     }).then(response => {
         setLastFileUpload(new Date());
         console.log(response);

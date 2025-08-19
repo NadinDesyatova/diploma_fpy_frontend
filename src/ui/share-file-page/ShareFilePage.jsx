@@ -12,7 +12,10 @@ export function ShareFilePage () {
       const url = `${import.meta.env.VITE_APP_BASE_USL_API}files/?link=${fileLink}`;
       console.log(url);
       
-      fetch(url)
+      fetch(url, {
+        method: 'GET',
+        credentials: 'include'
+      })
         .then(response => {
           if (!response.ok) {
             throw new Error('Ответ от сервера не получен');

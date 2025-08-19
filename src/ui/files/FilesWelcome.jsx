@@ -6,7 +6,7 @@ import { Navigate } from "react-router-dom";
 
 
 function FilesWelcomeForAdmin ({state}) {
-  return <Navigate to='/admin' state={state} replace={true} />;
+  return <Navigate to='/admin' state={state} replace={false} />;
 }
 
 function FilesWelcomeForSimpleUsers ({id, name, login}) {    

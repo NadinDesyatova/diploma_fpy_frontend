@@ -20,7 +20,7 @@ function LogoutButton ({ login }) {
       }).then(data => {
         if (data.status == "deleted") {
           localStorage.clear();
-          navigate("/", { replace: true });
+          navigate("/", { replace: false });
         } else {
           alert("Возникла техническая ошибка, попробуйте зайти на сайт позже");
         }

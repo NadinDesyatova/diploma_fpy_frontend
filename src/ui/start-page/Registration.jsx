@@ -43,8 +43,7 @@ export function Registration ({ SetViewPage }) {
       body: JSON.stringify(inputInfo),
       headers: {
         "Content-Type": "application/json",
-      },
-      credentials: 'include'
+      }
     }).then((response) => {
       return response.json()
     }).then((data) => {
