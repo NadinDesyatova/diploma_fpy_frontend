@@ -8,30 +8,29 @@ export function Authorization ({ SetViewPage }) {
     password: "",
   });
   const [errorMsg, setErrorMsg] = useState('');
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const storedLogin = localStorage.getItem('userLogin');
     const storedPassword = localStorage.getItem('userPassword');
     console.log(storedLogin);
-    if (storedLogin || storedPassword) {
+    if (storedLogin && storedPassword) {
       fetch(`${import.meta.env.VITE_APP_BASE_USL_API}check_session/`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: 'include',
-      body: JSON.stringify({login: storedLogin, password: storedPassword})
-    })
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      if (data.status_code === 200) {
-        console.log("Вы успешно авторизовались", data)
-        navigate('/files', { state: data.user[0], replace: false});
-      }
-    });
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: 'include',
+        body: JSON.stringify({login: storedLogin, password: storedPassword})
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        if (data.status_code === 200) {
+          console.log("Вы успешно авторизовались", data);
+          navigate('/mycloud', { replace: false});
+        }
+      });
     }
   }, []);
 
@@ -50,7 +49,8 @@ export function Authorization ({ SetViewPage }) {
       body: JSON.stringify(inputInfo),
       headers: {
         "Content-Type": "application/json",
-      }
+      },
+      withCredentials: true
     })
     .then((response) => {
       if (response.status === 200) {
@@ -69,7 +69,7 @@ export function Authorization ({ SetViewPage }) {
         localStorage.setItem('userLogin', inputInfo.login);
         localStorage.setItem('userPassword', inputInfo.password);
 
-        navigate('/files', { state: data, replace: false }); 
+        navigate('/mycloud', { replace: false }); 
       } 
     });
   };

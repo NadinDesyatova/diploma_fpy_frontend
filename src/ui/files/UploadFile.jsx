@@ -9,7 +9,7 @@ function UploadFile ({ userId, setLastFileUpload}) {
     'comment': ''
   })
   
-  const [resultMsg, setResultMsg] = useState('')
+  const [resultMsg, setResultMsg] = useState('');
   const serverUrl = `${import.meta.env.VITE_APP_BASE_USL_API}files/`;
 
   const onChangeHandler = (e) => {
@@ -42,6 +42,7 @@ function UploadFile ({ userId, setLastFileUpload}) {
       const response = await fetch(serverUrl, {
         method: 'POST',
         credentials: 'include',
+        mode: 'cors',
         body: formData
       });
 

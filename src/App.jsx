@@ -1,8 +1,9 @@
 import './App.css';
+import { Routes, Route, BrowserRouter } from "react-router-dom";
 import MainHeader from './ui/main-header/MainHeader';
 import { StartPage } from './ui/start-page/StartPage';
-import { FilesWelcome } from './ui/files/FilesWelcome';
-import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { MyCloud } from './ui/my-cloud/MyCloud';
+import { MyFiles } from './ui/files/MyFiles';
 import { AdminPage } from './ui/admin/AdminPage';
 import { UserFilesForAdmin } from './ui/admin/UserFilesForAdmin';
 import { ShareFilePage } from './ui/share-file-page/ShareFilePage';
@@ -15,9 +16,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<StartPage />} />
-          <Route path="/files" element={<FilesWelcome />} />
-          <Route path="/admin" element={<AdminPage />} />
-          <Route path="/user_files" element={<UserFilesForAdmin />} />
+          <Route path="/mycloud" element={<MyCloud />} />
+          <Route path="/mycloud/admin" element={<AdminPage />} />
+          <Route path="/mycloud/admin/user/:user_id/files" element={<UserFilesForAdmin />} />
+          <Route path="/mycloud/my-files" element={<MyFiles />} />
           <Route path="/share/:fileLink" element={<ShareFilePage />} />
         </Routes>
       </BrowserRouter>

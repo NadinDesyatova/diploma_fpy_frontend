@@ -10,6 +10,7 @@ function LogoutButton ({ login }) {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
+        mode: 'cors',
         body: JSON.stringify({login: login}),
       }).then(resp => {
         if (resp.status == 204) {

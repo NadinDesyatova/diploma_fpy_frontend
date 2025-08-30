@@ -1,16 +1,15 @@
 import { useLocation } from 'react-router';
+import { ViewFilesStorage } from './ViewFilesStorage';
 import { MyCloudContent } from '../my-cloud/MyCloudContent';
-import { UsersListForAdmin } from './UsersListForAdmin';
-import { ViewFilesStorage } from '../files/ViewFilesStorage';
 
-export function AdminPage () {    
+
+export function MyFiles () {    
   const location = useLocation();
   const { id, name, login } = location.state || {};
 
   return (
     <MyCloudContent name={name} login={login}>
       <ViewFilesStorage id={id} isUserFilesForAdmin={false} />
-      <UsersListForAdmin state={location.state}/>
     </MyCloudContent>
   );
 }

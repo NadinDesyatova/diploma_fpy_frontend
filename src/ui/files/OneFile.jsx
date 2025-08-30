@@ -2,16 +2,18 @@ import DownloadButton from './DownloadButton';
 import { formatDate } from '../../common/formatDate';
 
 
-export function OneFile ({elem, fileLink, setLastFileUpload}) {
-  const onGetLink = (id) => {
+export function OneFile ({userId, isUserFilesForAdmin, elem, fileLink, setLastFileUpload}) {
+  
+  const onGetLink = (fileId) => {
     console.log("Получение ссылки на файл");
-    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_link_for_file/${id}/`, {
-      method: 'GET',
-      credentials: 'include'
-    })
-      .then(response => {
-        setLastFileUpload(new Date());
-        console.log(response);
+    
+    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_link_for_file/`, {
+      method: 'PATCH',
+      credentials: 'include',
+      body: JSON.stringify({file_id: fileId})
+    }).then(response => {
+      setLastFileUpload(new Date());
+      console.log(response);
     });
   }
 
@@ -20,29 +22,36 @@ export function OneFile ({elem, fileLink, setLastFileUpload}) {
     fetch(`${import.meta.env.VITE_APP_BASE_USL_API}files/${id}/`, {
       method: 'DELETE',
       credentials: 'include'
+    }).then(resp => { 
+      if (resp.status == 204) {
+        return {status: "deleted"};
+      } else {
+        return "Error";
+      }
     }).then(response => {
-        setLastFileUpload(new Date());
-        console.log(response);
+      setLastFileUpload(new Date());
+      console.log(response);
     });
   }
   
-  const renameButton = (elem) => {
+  const renameButton = (elemId) => {
     const newName = prompt("Введите новое имя файла: ");
 
     try {
-      fetch(`${import.meta.env.VITE_APP_BASE_USL_API}files/${elem.id}/`, {
+      fetch(`${import.meta.env.VITE_APP_BASE_USL_API}files/${elemId}/`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
+        mode: 'cors',
         body: JSON.stringify({
           file_name: newName
         })
       }).then(resp => {return resp.json()})
         .then(data => {
-          console.log(data)
-          setLastFileUpload(new Date())
+          console.log(data);
+          setLastFileUpload(new Date());
         });
     } catch (error) {
         console.error('Ошибка:', error);
@@ -54,8 +63,8 @@ export function OneFile ({elem, fileLink, setLastFileUpload}) {
       <span>{elem.file_name}</span>
       <span>{`${parseFloat(parseInt(elem.file_size) / 1000000)} MB`}</span>
       <span>{formatDate(elem.date)}</span><br />
-      <button onClick={() => {renameButton(elem)}}>Переименовать</button><br />
-      <DownloadButton fileId={elem.id} setLastFileUpload={setLastFileUpload} />
+      <button onClick={() => {renameButton(elem.id)}}>Переименовать</button><br />
+      <DownloadButton userId={userId} isUserFilesForAdmin={isUserFilesForAdmin} fileId={elem.id} setLastFileUpload={setLastFileUpload} />
       <span>Последняя дата скачивания: {formatDate(elem.last_upload_date)}</span><br />
       <div>Комментарий к файлу: {elem.comment}</div>
       <span>Чтобы получить ссылку на файл, нажмите на кнопку "Поделиться файлом": </span>

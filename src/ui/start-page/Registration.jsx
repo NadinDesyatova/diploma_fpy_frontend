@@ -11,22 +11,22 @@ export function Registration ({ SetViewPage }) {
   const inputRequirements = {
     login: {
       regex: "^[a-zA-Z]{1}[a-zA-Z0-9]{3,20}$",
-      titleText: "Enter only Latin letters and numbers, the first character is a letter, the length is from 4 to 20 characters."
+      titleText: "Вводите только латинские буквы и цифры, первый символ - буква, длина от 4 до 20 символов."
     },
     password: {
       regex: "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\\W).{6,}$",
-      titleText: "Enter at least 6 characters: at least one uppercase letter, one digit and one special character."
+      titleText: "Введите не менее 6 символов: по крайней мере, одну заглавную букву, одну цифру и один специальный символ."
     },
     email: {
       regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-      titleText: "Enter the correct email address"
+      titleText: "Введите правильный адрес электронной почты."
     }
   };
 
   const [resultMsg, setResultMsg] = useState('');
 
   const onChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setInputInfo((prev) => ({
       ...prev, 
       [name]: value
@@ -50,7 +50,6 @@ export function Registration ({ SetViewPage }) {
       console.log(data);
       if (data.create_object.id) {
         setResultMsg("Успешно создан аккаунт. Нажмите, пожалуйста, на кнопку 'Войти' для перехода на страницу входа.")
-        // setTimeout(() => {SetViewPage("Authorization")}, 2000);
       } else {
         console.log(data.login[0]);
         setResultMsg("Данный логин уже используется");

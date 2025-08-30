@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import DownloadButton from '../files/DownloadButton';
+import DownloadShareFile from './DownloadShareFile';
 
 export function ShareFilePage () {
   const { fileLink } = useParams();
   const [fileData, setFileData] = useState('');
-  console.log(fileLink)
+  console.log(fileLink);
 
   useEffect(() => {
     if (fileLink !== undefined) {
@@ -26,7 +26,6 @@ export function ShareFilePage () {
           console.log(data);
           setFileData(data);
         })
-
     }
   }, [fileLink])
   
@@ -34,7 +33,7 @@ export function ShareFilePage () {
   return (
     <div className='container'>
       <h1>С Вами поделились файлом: {fileData.file_name}</h1>
-      <DownloadButton fileId={fileData.id} />
+      <DownloadShareFile fileId={fileData.id} />
     </div>
   );
 };

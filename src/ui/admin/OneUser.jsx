@@ -1,11 +1,16 @@
-export function OneUser ({elem, navigate, setLastUsersUpload}) {
+export function OneUser ({adminState, elem, navigate, setLastUsersUpload}) {
 
-  const goToUserFiles = (user) => {
-    navigate('/user_files', { state: user });
+  const goToUserFiles = (userId, userName, adminState) => {
+    const pathToUserFiles = `/mycloud/admin/user/${userId}/files`;
+    navigate(pathToUserFiles, { state: {
+      userId,
+      userName,
+      adminState
+    }});
   };
 
-  const changeAdminRights = (user) => {
-    const isAdmin = Boolean(!user.admin);
+  const changeAdminRights = (user, requestFromAdmin) => {
+    const newAdminRights = Boolean(!user.admin);
     try {
       fetch(`${import.meta.env.VITE_APP_BASE_USL_API}users/${user.id}/`, {
         method: 'PATCH',
@@ -13,8 +18,10 @@ export function OneUser ({elem, navigate, setLastUsersUpload}) {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
+        mode: 'cors',
         body: JSON.stringify({
-          admin: isAdmin
+          new_admin_rights: newAdminRights,
+          request_from_admin: requestFromAdmin
         })
       }).then(resp => {return resp.json()})
         .then(data => {
@@ -31,12 +38,19 @@ export function OneUser ({elem, navigate, setLastUsersUpload}) {
     if (checkOfDeletion) {
       try {
         fetch(`${import.meta.env.VITE_APP_BASE_USL_API}users/${user.id}/`, {
-          method: 'DELETE'
-        }).then(resp => {return resp.json()})
-          .then(data => {
-            console.log(data);
-            setLastUsersUpload(new Date());
-          });
+          method: 'DELETE',
+          credentials: 'include',
+          mode: 'cors'
+        }).then(resp => { 
+          if (resp.status == 204) {
+            return {status: "deleted"};
+          } else {
+            return "Error";
+          }
+        }).then(data => {
+          console.log(data);
+          setLastUsersUpload(new Date());
+        });
       } catch (error) {
         console.error('Ошибка:', error);
       };
@@ -49,10 +63,10 @@ export function OneUser ({elem, navigate, setLastUsersUpload}) {
       <div>name: {elem.name}</div>
       <div>email: {elem.email}</div>
       <div>isAdmin: {elem.admin}</div>
-      <button onClick={() => {changeAdminRights(elem)}}>Изменить права</button>
+      <button onClick={() => {changeAdminRights(elem, adminState["admin"])}}>Изменить права</button>
       <div>files number: {elem.files.length}</div>
       <div>files storage size: {`${elem.files_storage_size / 1000000} MB`}</div>
-      <button onClick={() => {goToUserFiles(elem)}}>Перейти в файловое хранилище</button>
+      <button onClick={() => {goToUserFiles(elem.id, elem.name, adminState)}}>Перейти в файловое хранилище</button>
       <button onClick={() => {deleteUser(elem)}}>Удалить пользователя</button>
     </li>
   )

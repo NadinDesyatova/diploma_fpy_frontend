@@ -3,18 +3,18 @@ import { ViewFilesStorage } from '../files/ViewFilesStorage';
 
 export function UserFilesForAdmin () {
   const location = useLocation();
-  const { id, name } = location.state || {};
+  const { userId, userName, adminState } = location.state || {};
   const navigate = useNavigate();
     
-  const backButton = () => {
-    navigate(-1)
+  const onClickBackButton = () => {
+    navigate("/mycloud/admin", { state: adminState, replace: false });
   };
 
   return (
     <div className='container'>
-      <button onClick={backButton}>Назад</button>
-      <h2>Файлы пользователя {name}</h2>
-      <ViewFilesStorage id={id} />
+      <button onClick={onClickBackButton}>Назад</button>
+      <h2>Файлы пользователя {userName}</h2>
+      <ViewFilesStorage id={userId} isUserFilesForAdmin={adminState["admin"]} />
     </div>
   );
 }
