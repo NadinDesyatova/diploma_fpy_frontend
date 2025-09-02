@@ -33,10 +33,6 @@ export function ViewFilesStorage ({id, isUserFilesForAdmin}) {
       }
     })
   }
-
-  useEffect(() => {
-    sendFetchToGetUserFiles(id);
-  }, []);
   
   useEffect(() => {
     sendFetchToGetUserFiles(id);
@@ -52,7 +48,7 @@ export function ViewFilesStorage ({id, isUserFilesForAdmin}) {
             elem.file_link 
               ? `${import.meta.env.VITE_APP_BASE_URL_WEBSITE}share/${elem.file_link}` 
               : ""
-          return <OneFile userId={id} isUserFilesForAdmin={isUserFilesForAdmin} elem={elem} fileLink={fileLink} setLastFileUpload={setLastFileUpload} />
+          return <OneFile userId={id} isUserFilesForAdmin={isUserFilesForAdmin} fileLink={fileLink} elem={elem} setLastFileUpload={setLastFileUpload} />
         })}
       </ul>
     </div>

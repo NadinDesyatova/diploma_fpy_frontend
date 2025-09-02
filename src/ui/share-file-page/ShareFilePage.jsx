@@ -9,7 +9,7 @@ export function ShareFilePage () {
 
   useEffect(() => {
     if (fileLink !== undefined) {
-      const url = `${import.meta.env.VITE_APP_BASE_USL_API}files/?link=${fileLink}`;
+      const url = `${import.meta.env.VITE_APP_BASE_USL_API}retrieve_by_link/?link=${fileLink}`;
       console.log(url);
       
       fetch(url, {
@@ -27,13 +27,13 @@ export function ShareFilePage () {
           setFileData(data);
         })
     }
-  }, [fileLink])
+  }, [fileLink]);
   
 
   return (
     <div className='container'>
       <h1>С Вами поделились файлом: {fileData.file_name}</h1>
-      <DownloadShareFile fileId={fileData.id} />
+      <DownloadShareFile fileId={fileData.id} userId={fileData.user_id} fileName={fileData.file_name} />
     </div>
   );
 };

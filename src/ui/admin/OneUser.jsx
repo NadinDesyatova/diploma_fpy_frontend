@@ -62,12 +62,13 @@ export function OneUser ({adminState, elem, navigate, setLastUsersUpload}) {
       <div>id: {elem.id}</div>
       <div>name: {elem.name}</div>
       <div>email: {elem.email}</div>
-      <div>isAdmin: {elem.admin}</div>
+      <div>isAdmin: {String(elem.admin)}</div>
       <button onClick={() => {changeAdminRights(elem, adminState["admin"])}}>Изменить права</button>
-      <div>files number: {elem.files.length}</div>
       <div>files storage size: {`${elem.files_storage_size / 1000000} MB`}</div>
-      <button onClick={() => {goToUserFiles(elem.id, elem.name, adminState)}}>Перейти в файловое хранилище</button>
-      <button onClick={() => {deleteUser(elem)}}>Удалить пользователя</button>
+      <div className="buttons-block">
+        <button onClick={() => {goToUserFiles(elem.id, elem.name, adminState)}}>Перейти в файловое хранилище</button>
+        <button onClick={() => {deleteUser(elem)}}>Удалить пользователя</button>
+      </div>      
     </li>
   )
 }

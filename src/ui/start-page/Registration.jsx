@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function Registration ({ SetViewPage }) {
   const [inputInfo, setInputInfo] = useState({
@@ -7,6 +7,12 @@ export function Registration ({ SetViewPage }) {
     password: '',
     email: ''
   });
+
+  const [resultMsg, setResultMsg] = useState('');
+
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
 
   const inputRequirements = {
     login: {
@@ -23,8 +29,6 @@ export function Registration ({ SetViewPage }) {
     }
   };
 
-  const [resultMsg, setResultMsg] = useState('');
-
   const onChange = (e) => {
     const { name, value } = e.target;
     setInputInfo((prev) => ({
@@ -36,27 +40,26 @@ export function Registration ({ SetViewPage }) {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    console.log(e.target);
-
-    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}users/`, {
-      method: "POST",
-      body: JSON.stringify(inputInfo),
-      headers: {
-        "Content-Type": "application/json",
-      }
-    }).then((response) => {
-      return response.json()
-    }).then((data) => {
-      console.log(data);
-      if (data.create_object.id) {
-        setResultMsg("Успешно создан аккаунт. Нажмите, пожалуйста, на кнопку 'Войти' для перехода на страницу входа.")
-      } else {
-        console.log(data.login[0]);
-        setResultMsg("Данный логин уже используется");
-      }
-    }).catch(data => 
-      console.log(data)
-    )
+    try {
+      fetch(`${import.meta.env.VITE_APP_BASE_USL_API}users/`, {
+        method: "POST",
+        body: JSON.stringify(inputInfo),
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }).then((response) => {
+        return response.json();
+      }).then((data) => {
+        console.log(data);
+        if (data.status_code === 200) {
+          setResultMsg("Успешно создан аккаунт. Нажмите, пожалуйста, на кнопку 'Войти' для перехода на страницу входа.")
+        } else {
+          setResultMsg(data.error_message);
+        }
+      })
+    } catch (error) {
+      console.error('Ошибка при отправке запроса:', error);
+    }
   };
 
   return (

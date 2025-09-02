@@ -7,6 +7,10 @@ body {
   color: #4b2e83; 
   margin: 0;
   padding: 0;
+
+  background-color: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
 }
 
 .container-form {
@@ -54,6 +58,10 @@ h2 {
 .error-msg {
   color: rgb(255, 0, 43);
   font-size: 12px;
+}
+
+.logout-btn {
+  margin-top: 14px;
 }
 
 .buttons-block {
@@ -135,13 +143,6 @@ button:hover {
   padding: 0;
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  line-height: 1.6;
-}
-
 .main-container {
   display: flex;
   flex-direction: column;
@@ -164,12 +165,11 @@ body {
   background: #d8dee1fc;
 }
 
-
 .container {
   /* max-width: 1200px;
   margin: 0 auto; */
   max-width: 800px;
-  margin: 50px auto;
+  margin: 10px auto;
   padding: 20px;
   background-color: white;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
@@ -179,7 +179,7 @@ body {
 h1, h2 {
   text-align: center;
   color: var(--primary-color);
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .container-form {
@@ -222,7 +222,7 @@ h1, h2 {
 .buttons-block {
   display: flex;
   justify-content: space-between;
-  margin-top: 30px;
+  margin-top: 5px;
 }
 
 .button-form {
@@ -263,16 +263,6 @@ h1, h2 {
   background-color: var(--secondary-color);
 }
 
-ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-ul li {
-  margin-bottom: 20px;
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
-}
 
 ul li span {
   display: block;
@@ -313,4 +303,8 @@ ul li button:hover {
 
 .one-user {
   display: flex;
+}
+
+.one-file {
+  margin-top: 14px;
 }

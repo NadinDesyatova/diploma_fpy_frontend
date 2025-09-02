@@ -1,24 +1,35 @@
-function DownloadButton ({ userId, isUserFilesForAdmin, fileId, setLastFileUpload }) {
-  const handleDownload = (userId, fileId) => {
+function DownloadButton ({ userId, isUserFilesForAdmin, fileData, setLastFileUpload }) {
+
+  const handleDownload = (userId, fileId, fileName) => {
     console.log("Загрузка файла");
     
     fetch(`${import.meta.env.VITE_APP_BASE_USL_API}download_file/`, {
       method: 'PATCH',
       credentials: 'include',
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
         user_id: userId, 
         file_id: fileId,
-        share_file: false,
         is_user_files_for_admin: isUserFilesForAdmin
       })
-    }).then(response => {
-      setLastFileUpload(new Date());
-      console.log(response);
+    }).then(res => res.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.append(a); 
+        a.click();    
+        a.remove();      
+      
+        setLastFileUpload(new Date());
     });
   };
 
   return (
-    <button onClick={() => handleDownload(userId, fileId)}>
+    <button onClick={() => handleDownload(userId, fileData.id, fileData.file_name)}>
       Скачать файл
     </button>
   );

@@ -38,10 +38,6 @@ function AdminIsAuthorized ({state}) {
 
   useEffect(() => {
     sendFetchToGetUsers(admin);
-  }, []);
-
-  useEffect(() => {
-    sendFetchToGetUsers(admin);
   }, [lastUsersUpload]);
 
   const uploadUsers = () => {
@@ -51,6 +47,7 @@ function AdminIsAuthorized ({state}) {
   return (
     <div className="admin-content">
       <button onClick={uploadUsers}>Обновить список пользователей</button>
+      <h2>Список пользователей:</h2>
       <ul>
         {viewUsers.map(elem => {
           return <OneUser adminState={state} elem={elem} navigate={navigate} setLastUsersUpload={setLastUsersUpload} />
@@ -60,7 +57,7 @@ function AdminIsAuthorized ({state}) {
   )
 }
 
-export function UsersListForAdmin (state) {
+export function UsersListForAdmin ({state}) {
   const { admin } = state || {};
   return (
     <>

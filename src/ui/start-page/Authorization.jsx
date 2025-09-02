@@ -50,15 +50,18 @@ export function Authorization ({ SetViewPage }) {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: 'include',
       withCredentials: true
     })
     .then((response) => {
       if (response.status === 200) {
         return response.json();
-      }
-      else {
+      } else if (response.status === 404) {
         console.log(response);
         setErrorMsg("Неверный логин или пароль");
+      } else {
+        console.log(response);
+        setErrorMsg(`Возникла ошибка, код ошибки: ${String(response.status)}`);
       }
     })
     .then((data) => {

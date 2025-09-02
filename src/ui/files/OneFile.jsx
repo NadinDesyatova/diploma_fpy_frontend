@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import DownloadButton from './DownloadButton';
 import { formatDate } from '../../common/formatDate';
 
 
-export function OneFile ({userId, isUserFilesForAdmin, elem, fileLink, setLastFileUpload}) {
+export function OneFile ({userId, isUserFilesForAdmin, fileLink, elem, setLastFileUpload}) {
+  const [currentFileLink, setCurrentFileLink] = useState(fileLink);
   
   const onGetLink = (fileId) => {
     console.log("Получение ссылки на файл");
@@ -10,10 +12,24 @@ export function OneFile ({userId, isUserFilesForAdmin, elem, fileLink, setLastFi
     fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_link_for_file/`, {
       method: 'PATCH',
       credentials: 'include',
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({file_id: fileId})
-    }).then(response => {
-      setLastFileUpload(new Date());
-      console.log(response);
+    }).then((response) => {
+      if (response.status === 200) {
+        return response.json();
+      } else {
+        console.log(`Возникла ошибка, код ошибки: ${String(response.status)}`);
+      }
+    }).then(data => {
+      if (data.status_code === 200) {
+        setCurrentFileLink(`${import.meta.env.VITE_APP_BASE_URL_WEBSITE}share/${data.file_link}`);
+        // setLastFileUpload(new Date());
+        console.log(data);
+      } else {
+        setCurrentFileLink(data.error_message);
+      }      
     });
   }
 
@@ -35,7 +51,7 @@ export function OneFile ({userId, isUserFilesForAdmin, elem, fileLink, setLastFi
   }
   
   const renameButton = (elemId) => {
-    const newName = prompt("Введите новое имя файла: ");
+    const newName = prompt("Введите новое имя файла с расширением: ");
 
     try {
       fetch(`${import.meta.env.VITE_APP_BASE_USL_API}files/${elemId}/`, {
@@ -60,17 +76,21 @@ export function OneFile ({userId, isUserFilesForAdmin, elem, fileLink, setLastFi
 
   return ( 
     <li className="one-file" id={elem.id} key={elem.id}>
-      <span>{elem.file_name}</span>
+      <h3>{elem.file_name}</h3>
       <span>{`${parseFloat(parseInt(elem.file_size) / 1000000)} MB`}</span>
-      <span>{formatDate(elem.date)}</span><br />
-      <button onClick={() => {renameButton(elem.id)}}>Переименовать</button><br />
-      <DownloadButton userId={userId} isUserFilesForAdmin={isUserFilesForAdmin} fileId={elem.id} setLastFileUpload={setLastFileUpload} />
-      <span>Последняя дата скачивания: {formatDate(elem.last_upload_date)}</span><br />
+      <span>{formatDate(elem.date)}</span>
+      <div className="buttons-block">
+        <button onClick={() => {renameButton(elem.id)}}>Переименовать</button>
+        <DownloadButton userId={userId} isUserFilesForAdmin={isUserFilesForAdmin} fileData={elem} setLastFileUpload={setLastFileUpload} />
+      </div> 
+      <span>Последняя дата скачивания: {elem.last_upload_date !== null ? formatDate(elem.last_upload_date) : ""}</span><br />
       <div>Комментарий к файлу: {elem.comment}</div>
-      <span>Чтобы получить ссылку на файл, нажмите на кнопку "Поделиться файлом": </span>
-      <a href={fileLink}>{fileLink}</a>
-      <button onClick={() => onGetLink(elem.id)}>Поделиться файлом</button><br />
-      <button onClick={() => onDelete(elem.id)}>Удалить файл</button><br />
+      <span>Ссылка на файл (если ссылка не отображается, нажмите на кнопку "Поделиться файлом"): </span>
+      <a href={currentFileLink}>{currentFileLink ? "Действующая ссылка" : ""}</a>
+      <div className="buttons-block">
+        <button onClick={() => onGetLink(elem.id)}>Поделиться файлом</button>
+        <button onClick={() => onDelete(elem.id)}>Удалить файл</button>
+      </div>      
     </li>
   );
 };
