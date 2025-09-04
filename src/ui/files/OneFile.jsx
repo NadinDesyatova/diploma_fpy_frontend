@@ -25,7 +25,7 @@ export function OneFile ({userId, isUserFilesForAdmin, fileLink, elem, setLastFi
     }).then(data => {
       if (data.status_code === 200) {
         setCurrentFileLink(`${import.meta.env.VITE_APP_BASE_URL_WEBSITE}share/${data.file_link}`);
-        // setLastFileUpload(new Date());
+        
         console.log(data);
       } else {
         setCurrentFileLink(data.error_message);

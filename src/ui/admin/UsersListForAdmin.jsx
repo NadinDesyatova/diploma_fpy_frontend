@@ -48,9 +48,9 @@ function AdminIsAuthorized ({state}) {
     <div className="admin-content">
       <button onClick={uploadUsers}>Обновить список пользователей</button>
       <h2>Список пользователей:</h2>
-      <ul>
-        {viewUsers.map(elem => {
-          return <OneUser adminState={state} elem={elem} navigate={navigate} setLastUsersUpload={setLastUsersUpload} />
+      <ul className="users-list">
+        {viewUsers.map((elem, i) => {
+          return <OneUser key={i} adminState={state} elem={elem} navigate={navigate} setLastUsersUpload={setLastUsersUpload} />
         })}
       </ul>
     </div>

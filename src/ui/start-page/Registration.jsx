@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export function Registration ({ SetViewPage }) {
   const [inputInfo, setInputInfo] = useState({
@@ -9,10 +9,6 @@ export function Registration ({ SetViewPage }) {
   });
 
   const [resultMsg, setResultMsg] = useState('');
-
-  useEffect(() => {
-    localStorage.clear();
-  }, []);
 
   const inputRequirements = {
     login: {

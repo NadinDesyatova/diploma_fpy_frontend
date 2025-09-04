@@ -115,7 +115,7 @@ li {
 }
 
 button {
-  background-color: #3f8e50; 
+  background-color: var(--primary-color); 
   color: white;
   border: none;
   border-radius: 5px;
@@ -124,13 +124,13 @@ button {
 }
 
 button:hover {
-  background-color: #bddc5e; 
+  background-color: var(--secondary-color); 
 }
 
 
 :root {
-  --primary-color: #4dff88; 
-  --secondary-color: #baa7ff; 
+  --primary-color: #30ac5a; 
+  --secondary-color: #317335; 
   --text-color: #333; 
   --background-color: #fbfff9;
 }
@@ -149,13 +149,13 @@ button:hover {
   align-items: center;
   width: 90vw;
   max-width: 1000px;
+  margin-bottom: 15px;
 }
 
 .main-site-information {
   display: flex;
   align-items: center;
-  width: 90vw;
-  max-width: 1000px;
+  max-width: 90vw;
   padding: 17px 25px;
   border-bottom-width: .1rem;
   border-bottom-style: solid;
@@ -165,20 +165,24 @@ button:hover {
   background: #d8dee1fc;
 }
 
+.cloud-content {
+  display: flex;
+  width: 90vw;
+  align-items: baseline;
+}
+
 .container {
-  /* max-width: 1200px;
-  margin: 0 auto; */
-  max-width: 800px;
+  max-width: 45vw;
   margin: 10px auto;
   padding: 20px;
   background-color: white;
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 0 8px 5px rgba(0, 0, 0, 0.1);
   border-radius: 10px;
 }
 
 h1, h2 {
   text-align: center;
-  color: var(--primary-color);
+  margin-top: 15px;
   margin-bottom: 10px;
 }
 
@@ -240,11 +244,11 @@ h1, h2 {
 }
 
 .submit {
-  background-color: var(--secondary-color);
+  background-color: var(--primary-color);
 }
 
 .submit:hover {
-  background-color: var(--primary-color);
+  background-color: var(--secondary-color);
 }
 
 .button-update-files {
@@ -263,6 +267,9 @@ h1, h2 {
   background-color: var(--secondary-color);
 }
 
+.files-list-tittle {
+  margin-top: 20px;
+}
 
 ul li span {
   display: block;
@@ -301,8 +308,18 @@ ul li button:hover {
   background-color: var(--secondary-color);
 }
 
+.admin-content {
+  margin: 10px auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 2px 0 8px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
 .one-user {
   display: flex;
+  flex-direction: column;
+  padding-right: 2px;
 }
 
 .one-file {

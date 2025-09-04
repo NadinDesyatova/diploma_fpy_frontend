@@ -6,7 +6,7 @@ export function MyCloudContent ({name, login, children}) {
     <>
       <LogoutButton login={login} />
       <h1>Добро пожаловать, {name}!</h1>
-      {children}
+      <div className="cloud-content">{children}</div>
     </>
   );
 }

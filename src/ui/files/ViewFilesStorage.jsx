@@ -42,13 +42,14 @@ export function ViewFilesStorage ({id, isUserFilesForAdmin}) {
     <div className="container">
       <button className="button-update-files" onClick={() => {setLastFileUpload(new Date())}}>Обновить список файлов</button>
       <UploadFile userId={id} setLastFileUpload={setLastFileUpload}/>
+      <h3 className="files-list-tittle">Список файлов:</h3>
       <ul>
-        {viewFiles.map(elem => {
+        {viewFiles.map((elem, i) => {
           const fileLink = 
             elem.file_link 
               ? `${import.meta.env.VITE_APP_BASE_URL_WEBSITE}share/${elem.file_link}` 
               : ""
-          return <OneFile userId={id} isUserFilesForAdmin={isUserFilesForAdmin} fileLink={fileLink} elem={elem} setLastFileUpload={setLastFileUpload} />
+          return <OneFile key={i} userId={id} isUserFilesForAdmin={isUserFilesForAdmin} fileLink={fileLink} elem={elem} setLastFileUpload={setLastFileUpload} />
         })}
       </ul>
     </div>

@@ -80,7 +80,7 @@ function UploadFile ({ userId, setLastFileUpload}) {
     <div className="upload-form">
       <h2>Добавить новый файл:</h2>
       <div className="input-block">
-        <input type="file" name="new_file" value={inputContent.new_file === null ? "" : inputContent.new_file} onChange={onChangeHandler} placeholder="Загрузка файла" className="input-form" required />
+        <input type="file" name="new_file" onChange={onChangeHandler} placeholder="Загрузка файла" className="input-form" required />
         <input type="text" name="file_name" value={inputContent.file_name} onChange={onChangeHandler} placeholder="Имя файла с расширением" className="input-form" required />
         <input type="textarea" name="comment" value={inputContent.comment} onChange={onChangeHandler} placeholder="Комментарий" className="input-form" required />
         <div className="result-msg">{resultMsg}</div>
