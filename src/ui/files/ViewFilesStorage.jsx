@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import UploadFile from './UploadFile';
 import { OneFile } from './OneFile';
 import { sortByDate } from '../../common/sortingDate';
+import { useNavigate } from 'react-router-dom';
 
 export function ViewFilesStorage ({id, isUserFilesForAdmin}) {
   const [viewFiles, setViewFiles] = useState([]);
   const [lastFileUpload, setLastFileUpload] = useState(new Date());
+  const navigate = useNavigate();
 
   function sendFetchToGetUserFiles (id) {
     fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_user_files/`, { 
@@ -24,7 +26,7 @@ export function ViewFilesStorage ({id, isUserFilesForAdmin}) {
       if (response.ok) {
         return response.json()
       } else {
-        return false
+        navigate('/mycloud/user-not-found', { replace: false }); 
       }
     })
     .then(data => {

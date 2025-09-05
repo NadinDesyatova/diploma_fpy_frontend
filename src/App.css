@@ -226,6 +226,7 @@ h1, h2 {
 .buttons-block {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   margin-top: 5px;
 }
 

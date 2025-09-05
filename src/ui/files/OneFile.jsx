@@ -50,8 +50,8 @@ export function OneFile ({userId, isUserFilesForAdmin, fileLink, elem, setLastFi
     });
   }
   
-  const renameButton = (elemId) => {
-    const newName = prompt("Введите новое имя файла с расширением: ");
+  const changeFile = (elemId, changingField, promtMsg) => {
+    const newValue = prompt(`Введите ${promtMsg}: `);
 
     try {
       fetch(`${import.meta.env.VITE_APP_BASE_USL_API}files/${elemId}/`, {
@@ -62,7 +62,8 @@ export function OneFile ({userId, isUserFilesForAdmin, fileLink, elem, setLastFi
         credentials: 'include',
         mode: 'cors',
         body: JSON.stringify({
-          file_name: newName
+          changing_field: changingField,
+          new_value: newValue
         })
       }).then(resp => {return resp.json()})
         .then(data => {
@@ -80,7 +81,8 @@ export function OneFile ({userId, isUserFilesForAdmin, fileLink, elem, setLastFi
       <span>{`${parseFloat(parseInt(elem.file_size) / 1000000)} MB`}</span>
       <span>{formatDate(elem.date)}</span>
       <div className="buttons-block">
-        <button onClick={() => {renameButton(elem.id)}}>Переименовать</button>
+        <button onClick={() => {changeFile(elem.id, "file_name", "новое имя файла с расширением")}}>Переименовать</button>
+        <button onClick={() => {changeFile(elem.id, "comment", "новый комментарий")}}>Изменить комментарий</button>
         <DownloadButton userId={userId} isUserFilesForAdmin={isUserFilesForAdmin} fileData={elem} setLastFileUpload={setLastFileUpload} />
       </div> 
       <span>Последняя дата скачивания: {elem.last_upload_date !== null ? formatDate(elem.last_upload_date) : ""}</span><br />

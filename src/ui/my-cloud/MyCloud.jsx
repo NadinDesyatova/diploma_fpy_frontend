@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
-
-
-function UserIsNotAuthorized () {
-  return <h1>Не удалось авторизоваться. Попробуйте пройти авторизацию снова, пожалуйста.</h1>
-}
+import { UserIsNotAuthorized } from "../user-auth-error/UserIsNotAuthorize";
 
 function RequestSending() {
   return <div>...Отправляется запрос. Подождите, пожалуйста, немного.</div>
