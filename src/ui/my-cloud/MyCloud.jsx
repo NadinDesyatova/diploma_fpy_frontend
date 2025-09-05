@@ -10,28 +10,33 @@ export function MyCloud () {
   const [sessionUser, setSessionUser] = useState({});
 
   function sendFetchToGetExistUser () {
-    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_mycloud_user/`, { 
-      method: 'GET',
-      credentials: 'include', 
-      mode: 'cors',
-      headers: { 
-        'Content-Type': 'application/json',
-      }
-    }).then(response => {
-      console.log(response);
-      if (response.status === 200) {
-        return response.json();
-      } else {
-        setSessionUser(null);
-        return false;
-      }
-    }).then(data => {
-      if (data) {
-        console.log(data)
-        setSessionUser(data.user);
-      }
-    })
+    try {
+      fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_mycloud_user/`, { 
+        method: 'GET',
+        credentials: 'include', 
+        mode: 'cors',
+        headers: { 
+          'Content-Type': 'application/json',
+        }
+      }).then(response => {
+        console.log(response);
+        if (response.status === 200) {
+          return response.json();
+        } else {
+          setSessionUser(null);
+          return false;
+        }
+      }).then(data => {
+        if (data) {
+          console.log(data)
+          setSessionUser(data.user);
+        }
+      })
+    } catch (error) {
+      console.error('Ошибка при отправке запроса:', error);
+    }
   }
+    
 
   useEffect(() => {
     sendFetchToGetExistUser();

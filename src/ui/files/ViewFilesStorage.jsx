@@ -9,31 +9,32 @@ export function ViewFilesStorage ({id, isUserFilesForAdmin}) {
   const [lastFileUpload, setLastFileUpload] = useState(new Date());
   const navigate = useNavigate();
 
-  function sendFetchToGetUserFiles (id) {
-    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_user_files/`, { 
-      method: 'POST',
-      credentials: 'include', 
-      mode: 'cors',
-      body: JSON.stringify({
-        user_id: id
-      }),
-      headers: { 
-        'Content-Type': 'application/json',
-      }
-    })
-    .then(response => {
-      console.log(response);
+  async function sendFetchToGetUserFiles (id) {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_user_files/`, { 
+        method: 'POST',
+        credentials: 'include', 
+        mode: 'cors',
+        body: JSON.stringify({
+          user_id: id
+        }),
+        headers: { 
+          'Content-Type': 'application/json',
+        }
+      }); 
       if (response.ok) {
-        return response.json()
+        const responseJson = await response.json();
+        if (responseJson) {
+          setViewFiles(sortByDate(responseJson));
+        }
       } else {
-        navigate('/mycloud/user-not-found', { replace: false }); 
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);
       }
-    })
-    .then(data => {
-      if (data) {
-        setViewFiles(sortByDate(data));
-      }
-    })
+    } catch (error) {       
+      console.error('Ошибка при отправке запроса:', error.message);
+      navigate('/mycloud/user-not-found', { replace: false });
+    }
   }
   
   useEffect(() => {

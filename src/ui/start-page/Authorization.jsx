@@ -44,37 +44,41 @@ export function Authorization ({ SetViewPage }) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}login/`, {
-      method: "POST",
-      body: JSON.stringify(inputInfo),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: 'include',
-      withCredentials: true
-    })
-    .then((response) => {
-      if (response.status === 200) {
-        return response.json();
-      } else if (response.status === 404) {
-        console.log(response);
-        setErrorMsg("Неверный логин или пароль");
-      } else {
-        console.log(response);
-        setErrorMsg(`Возникла ошибка, код ошибки: ${String(response.status)}`);
-      }
-    })
-    .then((data) => {
-      if (data) {
-        console.log("Вы успешно авторизовались");
-        console.log(data);
+    try {
+      fetch(`${import.meta.env.VITE_APP_BASE_USL_API}login/`, {
+        method: "POST",
+        body: JSON.stringify(inputInfo),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: 'include',
+        withCredentials: true
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else if (response.status === 404) {
+          console.log(response);
+          setErrorMsg("Неверный логин или пароль");
+        } else {
+          console.log(response);
+          setErrorMsg(`Возникла ошибка, код ошибки: ${String(response.status)}`);
+        }
+      })
+      .then((data) => {
+        if (data) {
+          console.log("Вы успешно авторизовались");
+          console.log(data);
 
-        localStorage.setItem('userLogin', inputInfo.login);
-        localStorage.setItem('userPassword', inputInfo.password);
+          localStorage.setItem('userLogin', inputInfo.login);
+          localStorage.setItem('userPassword', inputInfo.password);
 
-        navigate('/mycloud', { replace: false }); 
-      } 
-    });
+          navigate('/mycloud', { replace: false }); 
+        } 
+      });
+    } catch (error) {
+      console.error('Ошибка при отправке запроса:', error);
+    }
   };
 
   return (
