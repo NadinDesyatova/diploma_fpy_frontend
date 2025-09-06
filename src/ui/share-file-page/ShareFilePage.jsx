@@ -6,26 +6,32 @@ export function ShareFilePage () {
   const { fileLink } = useParams();
   const [fileData, setFileData] = useState('');
   console.log(fileLink);
+  
+  const sendFetchForShareFile = async (url) => {
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        const responseJson = await response.json();
+        console.log(responseJson);
+        setFileData(responseJson);
+      } else {
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);
+      }
+    } catch (error) {
+      console.error('Ошибка:', error.message);
+      alert("К сожалению, возникла ошибка, попробуйте зайти на сайт позже");  
+    }
+  }
 
   useEffect(() => {
     if (fileLink !== undefined) {
       const url = `${import.meta.env.VITE_APP_BASE_USL_API}retrieve_by_link/?link=${fileLink}`;
-      console.log(url);
-      
-      fetch(url, {
-        method: 'GET',
-        credentials: 'include'
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Ответ от сервера не получен');
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log(data);
-          setFileData(data);
-        })
+      sendFetchForShareFile(url);
     }
   }, [fileLink]);
   

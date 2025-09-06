@@ -33,7 +33,7 @@ export function ViewFilesStorage ({id, isUserFilesForAdmin}) {
       }
     } catch (error) {       
       console.error('Ошибка при отправке запроса:', error.message);
-      navigate('/mycloud/user-not-found', { replace: false });
+      navigate('/mycloud/page-not-found', { replace: false });
     }
   }
   

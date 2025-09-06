@@ -5,56 +5,64 @@ import { formatDate } from '../../common/formatDate';
 
 export function OneFile ({userId, isUserFilesForAdmin, fileLink, elem, setLastFileUpload}) {
   const [currentFileLink, setCurrentFileLink] = useState(fileLink);
+  const [errorMsg, setErrorMsg] = useState("");
   
-  const onGetLink = (fileId) => {
+  const onGetLink = async (fileId) => {
     console.log("Получение ссылки на файл");
-    
-    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_link_for_file/`, {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({file_id: fileId})
-    }).then((response) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_link_for_file/`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({file_id: fileId})
+      });
+
       if (response.status === 200) {
-        return response.json();
+        const responseJson = await response.json();
+        if (responseJson.status_code === 200) {
+          setErrorMsg("");
+          setCurrentFileLink(`${import.meta.env.VITE_APP_BASE_URL_WEBSITE}share/${data.file_link}`);          
+          console.log(responseJson);
+        } else {
+          setErrorMsg(`Не удалось получить ссылку, ошибка: ${responseJson.error_message}`);
+        }      
       } else {
-        console.log(`Возникла ошибка, код ошибки: ${String(response.status)}`);
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);
       }
-    }).then(data => {
-      if (data.status_code === 200) {
-        setCurrentFileLink(`${import.meta.env.VITE_APP_BASE_URL_WEBSITE}share/${data.file_link}`);
-        
-        console.log(data);
-      } else {
-        setCurrentFileLink(data.error_message);
-      }      
-    });
+    } catch (error) {
+      setErrorMsg(`Не удалось получить ссылку, ошибка: ${error.message}`);
+    }
   }
 
-  const onDelete = (id) => {
+  const onDelete = async (id) => {
     console.log("Удаление файла");
-    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}files/${id}/`, {
-      method: 'DELETE',
-      credentials: 'include'
-    }).then(resp => { 
-      if (resp.status == 204) {
-        return {status: "deleted"};
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_BASE_USL_API}files/${id}/`, {
+        method: 'DELETE',
+        credentials: 'include'
+      });
+
+      if (response.status === 204) {
+        console.log(response);
+        setErrorMsg("");
+        setLastFileUpload(new Date());        
       } else {
-        return "Error";
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);
       }
-    }).then(response => {
-      setLastFileUpload(new Date());
-      console.log(response);
-    });
+    } catch (error) {
+      setErrorMsg(`При удалении возникла ошибка: ${error.message}`);
+    }
   }
   
-  const changeFile = (elemId, changingField, promtMsg) => {
+  const changeFile = async (elemId, changingField, promtMsg) => {
     const newValue = prompt(`Введите ${promtMsg}: `);
 
     try {
-      fetch(`${import.meta.env.VITE_APP_BASE_USL_API}files/${elemId}/`, {
+      const response = await fetch(`${import.meta.env.VITE_APP_BASE_USL_API}files/${elemId}/`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -65,19 +73,25 @@ export function OneFile ({userId, isUserFilesForAdmin, fileLink, elem, setLastFi
           changing_field: changingField,
           new_value: newValue
         })
-      }).then(resp => {return resp.json()})
-        .then(data => {
-          console.log(data);
-          setLastFileUpload(new Date());
-        });
+      });
+    
+      const responseJson = await response.json();
+      if (responseJson.status_code === 200) {
+        console.log(responseJson);
+        setErrorMsg("");
+        setLastFileUpload(new Date());
+      } else {
+        setErrorMsg(`Не удалось изменить файл: ${responseJson.error_message}`);
+      }
     } catch (error) {
-        console.error('Ошибка:', error);
+      setErrorMsg(`Не удалось изменить файл: ${error.message}`);
     }
   }
 
   return ( 
     <li className="one-file" id={elem.id} key={elem.id}>
       <h3>{elem.file_name}</h3>
+      
       <span>{`${parseFloat(parseInt(elem.file_size) / 1000000)} MB`}</span>
       <span>{formatDate(elem.date)}</span>
       <div className="buttons-block">
@@ -92,7 +106,8 @@ export function OneFile ({userId, isUserFilesForAdmin, fileLink, elem, setLastFi
       <div className="buttons-block">
         <button onClick={() => onGetLink(elem.id)}>Поделиться файлом</button>
         <button onClick={() => onDelete(elem.id)}>Удалить файл</button>
-      </div>      
+      </div>
+      <div className="error-msg">{errorMsg}</div>      
     </li>
   );
 };

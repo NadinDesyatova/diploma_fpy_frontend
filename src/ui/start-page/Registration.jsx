@@ -33,29 +33,30 @@ export function Registration ({ SetViewPage }) {
     }))
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-
+  async function sendFetchForRegistration () {
     try {
-      fetch(`${import.meta.env.VITE_APP_BASE_USL_API}users/`, {
+      const response = await fetch(`${import.meta.env.VITE_APP_BASE_USL_API}users/`, {
         method: "POST",
         body: JSON.stringify(inputInfo),
         headers: {
           "Content-Type": "application/json",
         }
-      }).then((response) => {
-        return response.json();
-      }).then((data) => {
-        console.log(data);
-        if (data.status_code === 200) {
-          setResultMsg("Успешно создан аккаунт. Нажмите, пожалуйста, на кнопку 'Войти' для перехода на страницу входа.")
-        } else {
-          setResultMsg(data.error_message);
-        }
-      })
+      });
+      const responseJson = await response.json();
+      console.log(responseJson);
+      if (responseJson.status_code === 200) {
+        setResultMsg("Успешно создан аккаунт. Нажмите, пожалуйста, на кнопку 'Войти' для перехода на страницу входа.")
+      } else {
+        setResultMsg(responseJson.error_message);
+      }
     } catch (error) {
-      console.error('Ошибка при отправке запроса:', error);
+      setResultMsg(`Ошибка: ${error.message}`);
     }
+  }
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    sendFetchForRegistration();    
   };
 
   return (

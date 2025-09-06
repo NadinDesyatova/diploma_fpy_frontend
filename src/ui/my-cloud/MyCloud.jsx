@@ -9,31 +9,27 @@ function RequestSending() {
 export function MyCloud () {
   const [sessionUser, setSessionUser] = useState({});
 
-  function sendFetchToGetExistUser () {
+  async function sendFetchToGetExistUser () {
     try {
-      fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_mycloud_user/`, { 
+      const response = await fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_mycloud_user/`, { 
         method: 'GET',
         credentials: 'include', 
         mode: 'cors',
         headers: { 
           'Content-Type': 'application/json',
         }
-      }).then(response => {
-        console.log(response);
-        if (response.status === 200) {
-          return response.json();
-        } else {
-          setSessionUser(null);
-          return false;
-        }
-      }).then(data => {
-        if (data) {
-          console.log(data)
-          setSessionUser(data.user);
-        }
-      })
+      });
+      if (response.status === 200) {
+        const responseJson = await response.json();
+        console.log(responseJson);
+        setSessionUser(responseJson.user);
+      } else {
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);
+      }
     } catch (error) {
-      console.error('Ошибка при отправке запроса:', error);
+      setSessionUser(null);
+      console.error('Возникла ошибка:', error.message);
     }
   }
     

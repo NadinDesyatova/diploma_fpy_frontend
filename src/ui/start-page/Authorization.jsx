@@ -11,26 +11,32 @@ export function Authorization ({ SetViewPage }) {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const storedLogin = localStorage.getItem('userLogin');
-    const storedPassword = localStorage.getItem('userPassword');
-    console.log(storedLogin);
-    if (storedLogin && storedPassword) {
-      fetch(`${import.meta.env.VITE_APP_BASE_USL_API}check_session/`, {
+  async function sendFetchToCheckSession (storedLogin, storedPassword) {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_BASE_USL_API}check_session/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         credentials: 'include',
         body: JSON.stringify({login: storedLogin, password: storedPassword})
-      }).then((response) => {
-        return response.json();
-      }).then((data) => {
-        if (data.status_code === 200) {
-          console.log("Вы успешно авторизовались", data);
-          navigate('/mycloud', { replace: false});
-        }
-      });
+      })
+      const responseJson = await response.json();
+      if (responseJson.status_code === 200) {
+        console.log("Вы успешно авторизовались", responseJson);
+        navigate('/mycloud', { replace: false});
+      }
+    } catch (error) {
+      setErrorMsg(`Возникла ошибка: ${error.message}`);
+    }
+  }
+
+  useEffect(() => {
+    const storedLogin = localStorage.getItem('userLogin');
+    const storedPassword = localStorage.getItem('userPassword');
+    console.log(storedLogin);
+    if (storedLogin && storedPassword) {
+      sendFetchToCheckSession (storedLogin, storedPassword);
     }
   }, []);
 
@@ -42,10 +48,9 @@ export function Authorization ({ SetViewPage }) {
     }));
   };
 
-  const onSubmit = (e) => {
-    e.preventDefault();
+  async function sendFetchToLogin () {
     try {
-      fetch(`${import.meta.env.VITE_APP_BASE_USL_API}login/`, {
+      const response = await fetch(`${import.meta.env.VITE_APP_BASE_USL_API}login/`, {
         method: "POST",
         body: JSON.stringify(inputInfo),
         headers: {
@@ -53,32 +58,31 @@ export function Authorization ({ SetViewPage }) {
         },
         credentials: 'include',
         withCredentials: true
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        } else if (response.status === 404) {
-          console.log(response);
-          setErrorMsg("Неверный логин или пароль");
-        } else {
-          console.log(response);
-          setErrorMsg(`Возникла ошибка, код ошибки: ${String(response.status)}`);
-        }
-      })
-      .then((data) => {
-        if (data) {
-          console.log("Вы успешно авторизовались");
-          console.log(data);
-
-          localStorage.setItem('userLogin', inputInfo.login);
-          localStorage.setItem('userPassword', inputInfo.password);
-
-          navigate('/mycloud', { replace: false }); 
-        } 
       });
+      if (response.status === 200) {
+        const responseJson = await response.json();
+        console.log(responseJson);
+        console.log("Вы успешно авторизовались");
+
+        localStorage.setItem('userLogin', inputInfo.login);
+        localStorage.setItem('userPassword', inputInfo.password);
+
+        navigate('/mycloud', { replace: false }); 
+      } else if (response.status === 404) {
+        console.log(response);
+        setErrorMsg("Неверный логин или пароль");
+      } else {
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);
+      }
     } catch (error) {
-      console.error('Ошибка при отправке запроса:', error);
+      setErrorMsg(`Возникла ошибка: ${error.message}`);
     }
+  } 
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    sendFetchToLogin();
   };
 
   return (

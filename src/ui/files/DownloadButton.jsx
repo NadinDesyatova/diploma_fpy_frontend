@@ -1,31 +1,34 @@
 function DownloadButton ({ userId, isUserFilesForAdmin, fileData, setLastFileUpload }) {
 
-  const handleDownload = (userId, fileId, fileName) => {
-    console.log("Загрузка файла");
-    
-    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}download_file/`, {
-      method: 'PATCH',
-      credentials: 'include',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        user_id: userId, 
-        file_id: fileId,
-        is_user_files_for_admin: isUserFilesForAdmin
-      })
-    }).then(res => res.blob())
-      .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        document.body.append(a); 
-        a.click();    
-        a.remove();      
+  const handleDownload = async (userId, fileId, fileName) => {
+    console.log("Отправка запроса на получение файла");  
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_BASE_USL_API}download_file/`, {
+        method: 'PATCH',
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          user_id: userId, 
+          file_id: fileId,
+          is_user_files_for_admin: isUserFilesForAdmin
+        })
+      });
+      console.log("Загрузка файла");
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.append(a); 
+      a.click();    
+      a.remove();      
       
-        setLastFileUpload(new Date());
-    });
+      setLastFileUpload(new Date());
+    } catch (error) {
+      console.error('Ошибка:', error.message); 
+    }
   };
 
   return (

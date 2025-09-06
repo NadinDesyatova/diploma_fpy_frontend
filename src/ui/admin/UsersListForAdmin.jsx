@@ -13,27 +13,29 @@ function AdminIsAuthorized ({state}) {
   const navigate = useNavigate();
   const { admin } = state;
 
-  function sendFetchToGetUsers (admin) {
-    fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_users/`, { 
-      method: 'POST',
-      credentials: 'include', 
-      mode: 'cors',
-      body: JSON.stringify({request_from_admin: admin}),
-      headers: { 
-        'Content-Type': 'application/json',
-      }
-    }).then(response => {
+  async function sendFetchToGetUsers (admin) {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_APP_BASE_USL_API}get_users/`, { 
+        method: 'POST',
+        credentials: 'include', 
+        mode: 'cors',
+        body: JSON.stringify({request_from_admin: admin}),
+        headers: { 
+          'Content-Type': 'application/json',
+        }
+      });
       if (response.ok) {
-        return response.json()
+        const responseJson = await response.json()
+        console.log(responseJson);
+        console.log("Пользователи успешно загружены");
+        setViewUsers(responseJson);
       } else {
-        return false
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);
       }
-    }).then(data => {
-      console.log(data);
-      console.log("Пользователи успешно загружены ");
-      if (!data) data = [];
-      setViewUsers(data);
-    })
+    } catch (error) {
+      console.error('Ошибка:', error.message);
+    }
   }
 
   useEffect(() => {

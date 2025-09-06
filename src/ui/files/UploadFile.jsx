@@ -20,33 +20,7 @@ function UploadFile ({ userId, setLastFileUpload}) {
     }));
   };
 
-  const uploadHandler = async () => {
-    if (inputContent.new_file === null) {
-      alert('Пожалуйста, выберите файл для загрузки.');
-      return;
-    }
-
-    const formData = new FormData();
-
-    for (const [name, value] of Object.entries(inputContent)) {
-      formData.append(name, value) 
-    };
-
-    const originalName = inputContent.new_file.name;
-
-    let extension = "";
-
-    const dotIndex = originalName.indexOf('.'); 
-    if (dotIndex !== -1) {
-      extension = originalName.substring(dotIndex);
-    }
-
-    formData.append('extension', extension);
-
-    formData.append('file_size', inputContent.new_file.size);
-  
-    formData.append('user_id', userId);
-
+  async function sendFileFetch (serverUrl, formData) {
     try {
       console.log('Происходит отправка файла на сервер');
       const response = await fetch(serverUrl, {
@@ -74,6 +48,36 @@ function UploadFile ({ userId, setLastFileUpload}) {
     } catch (error) {
       console.error('Ошибка при отправке запроса:', error);
     }
+  }
+
+  const uploadHandler = () => {
+    if (inputContent.new_file === null) {
+      alert('Пожалуйста, выберите файл для загрузки.');
+      return;
+    }
+
+    const formData = new FormData();
+
+    for (const [name, value] of Object.entries(inputContent)) {
+      formData.append(name, value) 
+    };
+
+    const originalName = inputContent.new_file.name;
+
+    let extension = "";
+
+    const dotIndex = originalName.indexOf('.'); 
+    if (dotIndex !== -1) {
+      extension = originalName.substring(dotIndex);
+    }
+
+    formData.append('extension', extension);
+
+    formData.append('file_size', inputContent.new_file.size);
+  
+    formData.append('user_id', userId);
+    
+    sendFileFetch(serverUrl, formData);   
   };
 
   return (

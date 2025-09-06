@@ -9,10 +9,10 @@ export function OneUser ({adminState, elem, navigate, setLastUsersUpload}) {
     }});
   };
 
-  const changeAdminRights = (user, requestFromAdmin) => {
+  const changeAdminRights = async (user, requestFromAdmin) => {
     const newAdminRights = Boolean(!user.admin);
     try {
-      fetch(`${import.meta.env.VITE_APP_BASE_USL_API}users/${user.id}/`, {
+      const response = await fetch(`${import.meta.env.VITE_APP_BASE_USL_API}users/${user.id}/`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -23,36 +23,33 @@ export function OneUser ({adminState, elem, navigate, setLastUsersUpload}) {
           new_admin_rights: newAdminRights,
           request_from_admin: requestFromAdmin
         })
-      }).then(resp => {return resp.json()})
-        .then(data => {
-          console.log(data);
-          setLastUsersUpload(new Date());
-        });
+      });
+      const responseJson = await response.json();
+      console.log(responseJson);
+      setLastUsersUpload(new Date());
     } catch (error) {
-        console.error('Ошибка:', error);
-    };
+      console.error('Ошибка:', error);
+    }
   };
 
-  const deleteUser = (user) => {
-    const checkOfDeletion = confirm(`Вы уверены что хотите удалить пользователя ${user.name}?`)
+  const deleteUser = async (user) => {
+    const checkOfDeletion = confirm(`Вы уверены что хотите удалить пользователя ${user.name}?`);
     if (checkOfDeletion) {
       try {
-        fetch(`${import.meta.env.VITE_APP_BASE_USL_API}users/${user.id}/`, {
+        const response = await fetch(`${import.meta.env.VITE_APP_BASE_USL_API}users/${user.id}/`, {
           method: 'DELETE',
           credentials: 'include',
           mode: 'cors'
-        }).then(resp => { 
-          if (resp.status == 204) {
-            return {status: "deleted"};
-          } else {
-            return "Error";
-          }
-        }).then(data => {
-          console.log(data);
-          setLastUsersUpload(new Date());
         });
+        if (response.status == 204) {
+          console.log(response);
+          setLastUsersUpload(new Date());
+        } else {
+          const errorMsg = await response.text();
+          throw new Error(errorMsg);
+        }
       } catch (error) {
-        console.error('Ошибка:', error);
+        console.error('Ошибка:', error.message);
       };
     }
   };
