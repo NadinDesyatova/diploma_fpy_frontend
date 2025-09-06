@@ -13,7 +13,7 @@ function LogoutButton ({ login }) {
         credentials: 'include',
         mode: 'cors',
         body: JSON.stringify({login: login}),
-      })
+      });
 
       if (response.status == 204) {
         localStorage.clear();
