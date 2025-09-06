@@ -24,9 +24,18 @@ export function OneUser ({adminState, elem, navigate, setLastUsersUpload}) {
           request_from_admin: requestFromAdmin
         })
       });
-      const responseJson = await response.json();
-      console.log(responseJson);
-      setLastUsersUpload(new Date());
+      if (response.status === 200) {
+        const responseJson = await response.json();
+        console.log(responseJson);
+        if (responseJson.status_code === 200) {
+          setLastUsersUpload(new Date());
+        } else {
+          console.log(`Не удалось изменить данные пользователя: ${responseJson.error_message}`);
+        }
+      } else {
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);        
+      }            
     } catch (error) {
       console.error('Ошибка:', error);
     }

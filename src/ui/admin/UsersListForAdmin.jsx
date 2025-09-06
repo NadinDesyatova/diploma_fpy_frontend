@@ -24,8 +24,8 @@ function AdminIsAuthorized ({state}) {
           'Content-Type': 'application/json',
         }
       });
-      if (response.ok) {
-        const responseJson = await response.json()
+      if (response.status === 200) {
+        const responseJson = await response.json();
         console.log(responseJson);
         console.log("Пользователи успешно загружены");
         setViewUsers(responseJson);

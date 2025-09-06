@@ -26,6 +26,7 @@ export function Registration ({ SetViewPage }) {
   };
 
   const onChange = (e) => {
+    setResultMsg('');
     const { name, value } = e.target;
     setInputInfo((prev) => ({
       ...prev, 
@@ -42,13 +43,18 @@ export function Registration ({ SetViewPage }) {
           "Content-Type": "application/json",
         }
       });
-      const responseJson = await response.json();
-      console.log(responseJson);
-      if (responseJson.status_code === 200) {
-        setResultMsg("Успешно создан аккаунт. Нажмите, пожалуйста, на кнопку 'Войти' для перехода на страницу входа.")
+      if (response.status === 200) {
+        const responseJson = await response.json();
+        console.log(responseJson);
+        if (responseJson.status_code === 200) {
+          setResultMsg("Успешно создан аккаунт. Нажмите, пожалуйста, на кнопку 'Войти' для перехода на страницу входа.")
+        } else {
+          setResultMsg(responseJson.error_message);
+        }
       } else {
-        setResultMsg(responseJson.error_message);
-      }
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);
+      }      
     } catch (error) {
       setResultMsg(`Ошибка: ${error.message}`);
     }

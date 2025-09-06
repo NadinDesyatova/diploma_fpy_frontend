@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom";
 export function Authorization ({ SetViewPage }) {
   const [inputInfo, setInputInfo] = useState({
     login: "",
-    password: "",
+    password: ""
   });
   const [errorMsg, setErrorMsg] = useState('');
+  const [requestWithLocalStorageData, setRequestWithLocalStorageData] = useState("");
 
   const navigate = useNavigate();
 
@@ -20,14 +21,21 @@ export function Authorization ({ SetViewPage }) {
         },
         credentials: 'include',
         body: JSON.stringify({login: storedLogin, password: storedPassword})
-      })
-      const responseJson = await response.json();
-      if (responseJson.status_code === 200) {
-        console.log("Вы успешно авторизовались", responseJson);
-        navigate('/mycloud', { replace: false});
-      }
+      });
+      if (response.status === 200) {
+        const responseJson = await response.json();
+        if (responseJson.status_code === 200) {
+          console.log("Вы успешно авторизовались", responseJson);
+          navigate('/mycloud', { replace: false});
+        }
+      } else {
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);
+      }     
     } catch (error) {
       setErrorMsg(`Возникла ошибка: ${error.message}`);
+    } finally {
+      setRequestWithLocalStorageData("");
     }
   }
 
@@ -36,11 +44,17 @@ export function Authorization ({ SetViewPage }) {
     const storedPassword = localStorage.getItem('userPassword');
     console.log(storedLogin);
     if (storedLogin && storedPassword) {
+      setInputInfo({
+        login: storedLogin,
+        password: storedPassword
+      });
+      setRequestWithLocalStorageData("Отправляем запрос, подождите, пожалуйста...");
       sendFetchToCheckSession (storedLogin, storedPassword);
     }
   }, []);
 
   const onChange = (e) => {
+    setErrorMsg("");
     const { name, value } = e.target;
     setInputInfo((prev) => ({
       ...prev,
@@ -86,12 +100,13 @@ export function Authorization ({ SetViewPage }) {
   };
 
   return (
-    <div className="container-form">
-      <form onSubmit={onSubmit} className="auth-form">
+    <div className="container-form">      
+      <form onSubmit={onSubmit} className="auth-form">   
         <h2 className="head-form">Войти</h2>
+        <div>{requestWithLocalStorageData}</div>  
         <div className="input-block">
-          <input type="text" placeholder="Логин" name="login" onChange={onChange} className="input-form"/>
-          <input type="password" placeholder="Пароль" name="password" onChange={onChange} className="input-form"/>
+          <input type="text" placeholder="Логин" name="login" value={inputInfo.login} onChange={onChange} className="input-form"/>
+          <input type="password" placeholder="Пароль" name="password" value={inputInfo.password} onChange={onChange} className="input-form"/>
           <div>{errorMsg}</div>
         </div>
         <div className="buttons-block">

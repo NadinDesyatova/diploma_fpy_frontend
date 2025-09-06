@@ -14,7 +14,7 @@ export function ShareFilePage () {
         credentials: 'include'
       });
       
-      if (response.ok) {
+      if (response.status === 200) {
         const responseJson = await response.json();
         console.log(responseJson);
         setFileData(responseJson);

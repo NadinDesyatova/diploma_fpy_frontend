@@ -31,8 +31,7 @@ export function MyCloud () {
       setSessionUser(null);
       console.error('Возникла ошибка:', error.message);
     }
-  }
-    
+  }    
 
   useEffect(() => {
     sendFetchToGetExistUser();

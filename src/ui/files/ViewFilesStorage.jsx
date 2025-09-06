@@ -22,7 +22,7 @@ export function ViewFilesStorage ({id, isUserFilesForAdmin}) {
           'Content-Type': 'application/json',
         }
       }); 
-      if (response.ok) {
+      if (response.status === 200) {
         const responseJson = await response.json();
         if (responseJson) {
           setViewFiles(sortByDate(responseJson));

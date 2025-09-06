@@ -15,19 +15,25 @@ function DownloadButton ({ userId, isUserFilesForAdmin, fileData, setLastFileUpl
           is_user_files_for_admin: isUserFilesForAdmin
         })
       });
-      console.log("Загрузка файла");
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.append(a); 
-      a.click();    
-      a.remove();      
       
-      setLastFileUpload(new Date());
+      if (response.status === 200) {
+        console.log("Загрузка файла");
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.append(a); 
+        a.click();    
+        a.remove();      
+      
+        setLastFileUpload(new Date());
+      } else {
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);
+      }
     } catch (error) {
-      console.error('Ошибка:', error.message); 
+      alert(`Ошибка: ${error.message}`); 
     }
   };
 

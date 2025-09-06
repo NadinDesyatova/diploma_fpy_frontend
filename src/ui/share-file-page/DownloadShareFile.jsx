@@ -15,17 +15,22 @@ function DownloadShareFile ({ fileId, userId, fileName }) {
           is_user_files_for_admin: false
         })
       });
-      console.log("Загрузка файла"); 
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = fileName;
-      document.body.append(a); 
-      a.click();    
-      a.remove();      
+      if (response.status === 200) {
+        console.log("Загрузка файла"); 
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.append(a); 
+        a.click();    
+        a.remove(); 
+      } else {
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);
+      }              
     } catch (error) {
-      console.error('Ошибка:', error.message); 
+      alert(`Ошибка: ${error.message}`); 
     }
   };
 

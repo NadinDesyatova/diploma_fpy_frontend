@@ -23,7 +23,7 @@ export function OneFile ({userId, isUserFilesForAdmin, fileLink, elem, setLastFi
         const responseJson = await response.json();
         if (responseJson.status_code === 200) {
           setErrorMsg("");
-          setCurrentFileLink(`${import.meta.env.VITE_APP_BASE_URL_WEBSITE}share/${data.file_link}`);          
+          setCurrentFileLink(`${import.meta.env.VITE_APP_BASE_URL_WEBSITE}share/${responseJson.file_link}`);          
           console.log(responseJson);
         } else {
           setErrorMsg(`Не удалось получить ссылку, ошибка: ${responseJson.error_message}`);
@@ -74,24 +74,27 @@ export function OneFile ({userId, isUserFilesForAdmin, fileLink, elem, setLastFi
           new_value: newValue
         })
       });
-    
-      const responseJson = await response.json();
-      if (responseJson.status_code === 200) {
-        console.log(responseJson);
-        setErrorMsg("");
-        setLastFileUpload(new Date());
+      if (response.status === 200) {
+        const responseJson = await response.json();
+        if (responseJson.status_code === 200) {
+          console.log(responseJson);
+          setErrorMsg("");
+          setLastFileUpload(new Date());
+        } else {
+          setErrorMsg(`Не удалось изменить файл: ${responseJson.error_message}`);
+        }
       } else {
-        setErrorMsg(`Не удалось изменить файл: ${responseJson.error_message}`);
-      }
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);        
+      }      
     } catch (error) {
-      setErrorMsg(`Не удалось изменить файл: ${error.message}`);
+      setErrorMsg(`Не удалось изменить файл, возникла ошибка: ${error.message}`);
     }
   }
 
   return ( 
     <li className="one-file" id={elem.id} key={elem.id}>
-      <h3>{elem.file_name}</h3>
-      
+      <h3>{elem.file_name}</h3>      
       <span>{`${parseFloat(parseInt(elem.file_size) / 1000000)} MB`}</span>
       <span>{formatDate(elem.date)}</span>
       <div className="buttons-block">

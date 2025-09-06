@@ -12,6 +12,7 @@ function UploadFile ({ userId, setLastFileUpload}) {
   const serverUrl = `${import.meta.env.VITE_APP_BASE_USL_API}files/`;
 
   const onChangeHandler = (e) => {
+    setResultMsg('');
     const { name, value } = e.target;
     console.log(e.target.files);
     setInputContent((prev) => ({
@@ -30,7 +31,7 @@ function UploadFile ({ userId, setLastFileUpload}) {
         body: formData
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         await response.json();
         setResultMsg('Файл успешно загружен');
         setTimeout(() => {
@@ -43,10 +44,11 @@ function UploadFile ({ userId, setLastFileUpload}) {
           setLastFileUpload(new Date());
         }, 100);
       } else {
-        setResultMsg('Ошибка при загрузке файла:', response.statusText);
+        const errorMsg = await response.text();
+        throw new Error(errorMsg);        
       }
     } catch (error) {
-      console.error('Ошибка при отправке запроса:', error);
+      setResultMsg(`Возникла ошибка: ${error.message}`);
     }
   }
 
